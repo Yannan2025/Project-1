@@ -1,60 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Portfolio</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yannan's Portfolio</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Add Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="#hero">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#skills">Skills</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
-    <section id="hero">
-        <h1>Welcome to My Portfolio</h1>
-        <p>Your Name - Your Title</p>
-        <a href="#projects" class="btn">View My Work</a>
-    </section>
-    <section id="about">
-        <h2>About Me</h2>
-        <p>A short paragraph about you.</p>
-    </section>
-    <section id="skills">
-        <h2>Skills</h2>
-        <ul>
-            <li><i class="fas fa-code"></i> Skill 1</li>
-            <li><i class="fas fa-code"></i> Skill 2</li>
-            <li><i class="fas fa-code"></i> Skill 3</li>
-        </ul>
-    </section>
-    <section id="projects">
-        <h2>Projects</h2>
-        <div class="project">
-            <h3>Project 1</h3>
-            <p>Description of project 1.</p>
-            <a href="#">View Project</a>
-        </div>
-        <div class="project">
-            <h3>Project 2</h3>
-            <p>Description of project 2.</p>
-            <a href="#">View Project</a>
-        </div>
-    </section>
-    <section id="contact">
-        <h2>Contact</h2>
-        <p>Email: your.email@example.com</p>
-    </section>
-    <footer>
-        <p>&copy; 2023 Your Name. All rights reserved.</p>
-    </footer>
+  <!-- Site header -->
+  <header class="site-header">
+    <h1>Yannan's Portfolio</h1>
+    <p class="site-bio">
+      Illinois Institute of Technology is a leading research university in Chicago, known for its innovation, diversity, and commitment to student success.
+    </p>
+  </header>
+  <!-- Navigation Menu -->
+  <nav class="main-nav">
+    <ul>
+      <li><a href="#home"><i class="fa-solid fa-house"></i> Home</a></li>
+      <li><a href="#about"><i class="fa-solid fa-magnifying-glass"></i> About</a></li>
+      <li><a href="#college-life"><i class="fa-solid fa-book"></i> College Life</a></li>
+      <li><a href="#contact"><i class="fa-solid fa-map"></i> Contact</a></li>
+    </ul>
+  </nav>
+  <!-- Call-to-Action Banner -->
+  <section id="home" class="cta-banner">
+    <div class="cta-overlay"></div>
+    <div class="cta-content">
+      <h2>Discover College Life with Yannan He!</h2>
+      <p>
+        College life is a journey of growth, learning, and new experiences. From attending classes and making friends to balancing studies and fun, every day brings something new. Dive in and see what makes college life so unique!
+      </p>
+      <a href="#college-life" class="cta-button">Explore College Life</a>
+    </div>
+  </section>
+   <section id="about" class="about-section">
+    <h2>About</h2>
+    <p>
+      Pursuing a degree in Mechanical Engineering can be both rewarding and challenging. College students in this major often face a demanding workload, balancing complex coursework, hands-on labs, and group projects. The pressure to master technical concepts, meet tight deadlines, and prepare for a competitive job market can be overwhelming. Despite these struggles, the journey builds resilience, problem-solving skills, and a strong sense of accomplishment that prepares students for a successful engineering career.
+    </p>
+  </section><!-- Two-column info section -->
+  <section id="college-life" class="info-section">
+    <div class="info-img">
+      <img src="img/1740945079112.jpg" alt="Portrait of Yannan He, Mechanical Engineering student" />
+    </div>
+    <div class="info-text">
+      <h3>College Students Making a Difference</h3>
+      <p>
+        College students like Yannan He balance academics, personal growth, and community involvement. Their energy and compassion help shape a brighter future, whether through campus activities, volunteering, or supporting peers. Every small action counts—get involved and make your mark!
+      </p>
+    </div>
+  </section>
+  <section id="contact" class="contact-section">
+    <h2>Contact</h2>
+    <ul>
+      <li><strong>Phone:</strong> (312) 555-0198</li>
+      <li><strong>Address:</strong> 3300 S Federal St, Chicago, IL 60616</li>
+      <li><strong>Post Office:</strong> PO Box 12345, Chicago, IL 60616</li>
+    </ul>
+  </section>
 </body>
 </html>

@@ -1,0 +1,240 @@
+/* Blank stylesheet */
+
+/* Use a modern, easy-to-read font for the whole page */
+body {
+  background: #eaf6fb;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+html {
+    scroll-behavior: smooth;
+}
+/* Simple site header styling */
+.site-header {
+  background: #1976d2;
+  color: #fff;
+  padding: 1.2em 0 1em 0;
+  text-align: center;
+  letter-spacing: 2px;
+}
+
+.site-header h1 {
+  margin: 0;
+  font-size: 2em;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* CTA Banner styles */
+.cta-banner {
+  position: relative;
+  min-height: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: url('img/66324e486200c36002784fe2_1702348628_en-idei-club-p-best-office-pictures-dizain-krasivo-64.jpg') center/cover no-repeat;
+  margin-bottom: 2em;
+  border-radius: 0 0 18px 18px;
+  overflow: hidden;
+}
+
+/* Overlay to keep text readable */
+.cta-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(24, 144, 163, 0.45); /* blue-teal overlay */
+  z-index: 1;
+}
+
+/* CTA content positioning and style */
+.cta-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: #fff;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2em 1em;
+}
+
+/* Main heading in CTA */
+.cta-content h2 {
+  font-size: 2.4em;
+  margin-bottom: 0.5em;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #e3f6fc;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+}
+
+/* CTA description */
+.cta-content p {
+  font-size: 1.25em;
+  margin-bottom: 1.5em;
+  color: #eafcff;
+  line-height: 1.6;
+}
+
+/* CTA button styling */
+.cta-button {
+  display: inline-block;
+  background: #00bcd4;
+  color: #fff;
+  font-size: 1.15em;
+  font-weight: bold;
+  padding: 0.9em 2.2em;
+  border-radius: 30px;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  transition: background 0.2s, transform 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.cta-button:hover,
+.cta-button:focus {
+  background: #1976d2;
+  transform: translateY(-2px) scale(1.04);
+}
+
+header h1,
+section h2,
+section h3 {
+  text-align: center;
+}
+
+header h1 {
+  font-size: 2.5em;
+  color: #003366;
+}
+
+section h2 {
+  font-size: 2em;
+  color: #d3d3d3;
+}
+
+section h3 {
+  font-size: 1.5em;
+}
+
+section p {
+  font-size: 1.15em;
+  line-height: 1.8;
+}
+
+section {
+  max-width: none;
+  width: 80%;
+  margin: 2em auto;
+  padding: 2em;
+  background: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border: 1px solid #cce0ff;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  text-align: center;
+}
+
+/* Contact section: restore card look and smaller width */
+.contact-section {
+  max-width: 400px;
+  width: 100%;
+  margin: 2em auto;
+  padding: 2em;
+  background: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border: 1px solid #cce0ff;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  text-align: center;
+}
+
+.contact-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Info section: two columns, centered */
+.info-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 900px;
+  margin: 2em auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 2em;
+  gap: 2em;
+}
+
+.info-img img {
+  width: 220px;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(24,144,163,0.10);
+  display: block;
+}
+
+.info-text {
+  flex: 1;
+  min-width: 220px;
+}
+
+.info-text h3 {
+  font-size: 1.5em;
+  color: #1976d2;
+  margin-top: 0;
+}
+
+.info-text p {
+  font-size: 1.1em;
+  color: #333;
+  line-height: 1.7;
+}
+
+/* Horizontal navigation bar styles */
+.main-nav ul {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: #1976d2;
+}
+
+.main-nav ul li {
+  margin: 0 1.5em;
+}
+
+.main-nav ul li a {
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 1em 0.5em;
+  transition: color 0.2s;
+}
+
+.main-nav ul li a:hover,
+.main-nav ul li a:focus {
+  color: #00bcd4;
+}
+
+/* Responsive: stack columns on small screens */
+@media (max-width: 700px) {
+  .info-section {
+    flex-direction: column;
+    padding: 1em;
+  }
+  .info-img img {
+    margin-bottom: 1em;
+    width: 100%;
+    height: auto;
+    max-width: 320px;
+  }
+}
