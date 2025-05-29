@@ -10,6 +10,41 @@ body {
 html {
     scroll-behavior: smooth;
 }
+
+/* Intel logo styling in header */
+.intel-logo {
+  display: block;
+  margin: 0 auto 0.5em auto;
+  max-width: 120px;
+  height: auto;
+}
+
+/* Intel-branded site header */
+.site-header {
+  background: #0071c5; /* Intel blue */
+  color: #fff;
+  padding: 1.8em 0 1.2em 0;
+  text-align: center;
+  letter-spacing: 2px;
+  border-bottom: 4px solid #00bcd4;
+}
+
+.site-header h1 {
+  margin: 0;
+  font-size: 2.3em;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 2px;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.site-header .site-bio {
+  color: #e3f6fc;
+  font-size: 1.1em;
+  margin-top: 0.7em;
+}
+
 /* Simple site header styling */
 .site-header {
   background: #1976d2;
@@ -225,16 +260,153 @@ section {
   color: #00bcd4;
 }
 
-/* Responsive: stack columns on small screens */
+/* Timeline Section Styles */
+.timeline-section {
+  display: flex;
+  flex-direction: row;
+  gap: 2em;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  max-width: 1200px;
+  margin: 3em auto;
+  padding: 2em 0;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.timeline-event {
+  flex: 0 0 320px;
+  min-width: 280px;
+  max-width: 340px;
+  background: #eaf6fb;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(24,144,163,0.08);
+  margin-bottom: 0;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-left: 6px solid #00bcd4;
+  position: relative;
+  cursor: pointer;
+  z-index: 1;
+  padding: 0;
+  transition: box-shadow 0.22s, transform 0.22s cubic-bezier(.4,2,.6,1);
+  overflow: hidden;
+}
+
+.timeline-event:focus-within,
+.timeline-event:hover {
+  transform: scale(1.05) translateY(-8px);
+  box-shadow: 0 8px 32px rgba(24,144,163,0.18), 0 2px 8px rgba(24,144,163,0.08);
+  background: #f5fdff;
+  border-color: #1976d2;
+}
+
+.timeline-img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 16px 16px 0 0;
+  display: block;
+  transition: filter 0.3s;
+}
+
+.timeline-front {
+  padding: 1em 1em 0.5em 1em;
+  width: 100%;
+  text-align: center;
+  background: transparent;
+  z-index: 2;
+}
+
+.timeline-date {
+  font-size: 1em;
+  color: #00bcd4;
+  font-weight: 700;
+  margin-bottom: 0.3em;
+}
+
+.timeline-event h4 {
+  margin: 0 0 0.2em 0;
+  color: #1976d2;
+  font-size: 1.15em;
+  font-weight: 700;
+}
+
+/* Hide details by default, reveal on hover/focus */
+.timeline-details {
+  opacity: 0;
+  max-height: 0;
+  padding: 0 1em;
+  color: #333;
+  font-size: 1em;
+  line-height: 1.5;
+  background: #eaf6fb;
+  transition: opacity 0.35s, max-height 0.35s, padding 0.35s;
+  overflow: hidden;
+  width: 100%;
+  text-align: left;
+}
+
+.timeline-event:hover .timeline-details,
+.timeline-event:focus-within .timeline-details {
+  opacity: 1;
+  max-height: 120px;
+  padding: 0.7em 1em 1.2em 1em;
+}
+
+.timeline-event:hover .timeline-img,
+.timeline-event:focus-within .timeline-img {
+  filter: brightness(0.85) blur(1px);
+}
+
+.timeline-event::after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: -6px;
+  top: 70px;
+  width: 12px;
+  height: 12px;
+  background: #00bcd4;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px #b3e5fc;
+  z-index: 2;
+}
+
+/* Responsive: stack timeline vertically on small screens */
 @media (max-width: 700px) {
-  .info-section {
+  .timeline-section {
     flex-direction: column;
-    padding: 1em;
+    scroll-snap-type: y mandatory;
+    overflow-x: unset;
+    overflow-y: auto;
+    gap: 1.2em;
+    padding: 1em 0;
+    align-items: center;
   }
-  .info-img img {
-    margin-bottom: 1em;
-    width: 100%;
-    height: auto;
-    max-width: 320px;
+  .timeline-event {
+    flex: unset;
+    min-width: unset;
+    max-width: 400px;
+    width: 95%;
+    border-left: 0;
+    border-top: 6px solid #00bcd4;
+    align-items: flex-start;
+    border-radius: 16px;
+  }
+  .timeline-event::after {
+    left: 24px;
+    top: -12px;
+  }
+  .timeline-img {
+    border-radius: 16px 16px 0 0;
+    height: 120px;
   }
 }
