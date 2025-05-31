@@ -11,7 +11,7 @@
 <body>
   <!-- Site header -->
   <header class="site-header">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c9/Intel-logo.svg" alt="Intel Logo" class="intel-logo" />
+  <img src="img/Screenshot 2025-05-29 163824.png" alt="Intel Logo" class="intel-logo" />
     <h1>Yannan's Portfolio</h1>
     <p class="site-bio">
       Illinois Institute of Technology is a leading research university in Chicago, known for its innovation, diversity, and commitment to student success.
@@ -27,7 +27,7 @@
     </ul>
   </nav>
   <!-- Call-to-Action Banner -->
-  <section id="home" class="cta-banner">
+  <section id="home" class="cta-banner" style="background-image: url('img/66324e486200c36002784fe2_1702348628_en-idei-club-p-best-office-pictures-dizain-krasivo-64.jpg');">
     <div class="cta-overlay"></div>
     <div class="cta-content">
       <h2>Discover College Life with Yannan He!</h2>
@@ -56,6 +56,10 @@
   </section>
   <!-- Timeline/Milestones Section -->
   <section class="timeline-section" aria-label="Milestones Timeline">
+    <button class="cancel-scroll-btn" style="display:none;">
+      Cancel <span class="cancel-scroll-note">automated horizontal sliding</span>
+    </button>
+    <div class="timeline-fade-overlay"></div>
     <div class="timeline-event">
       <img src="https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=400&q=80" alt="Started College" class="timeline-img" />
       <div class="timeline-front">
@@ -117,7 +121,7 @@
       </div>
     </div>
     <div class="timeline-event">
-      <img src="https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?auto=format&fit=crop&w=400&q=80" alt="Patent Awarded" class="timeline-img" />
+      <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80" alt="Patent Awarded" class="timeline-img" />
       <div class="timeline-front">
         <div class="timeline-date">2025</div>
         <h4>Patent Awarded</h4>
@@ -155,5 +159,119 @@
       <li><strong>Post Office:</strong> PO Box 12345, Chicago, IL 60616</li>
     </ul>
   </section>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const timelineSection = document.querySelector('.timeline-section');
+    const events = timelineSection.querySelectorAll('.timeline-event');
+    const cancelBtn = document.querySelector('.cancel-scroll-btn');
+    let scrollTimeout;
+    let lockedEvent = null;
+    // Persist autoScrollEnabled state across timeline mouse leave/enter
+    let autoScrollEnabled = localStorage.getItem('autoScrollEnabled') !== 'false';
+
+    // Helper to update button UI based on autoScrollEnabled
+    function updateCancelBtnUI() {
+      if (autoScrollEnabled) {
+        cancelBtn.classList.remove('cancelled');
+        cancelBtn.querySelector('.cancel-scroll-note').textContent = 'automated horizontal sliding';
+        cancelBtn.firstChild.textContent = 'Cancel ';
+      } else {
+        cancelBtn.classList.add('cancelled');
+        cancelBtn.querySelector('.cancel-scroll-note').textContent = 'enable automated horizontal sliding';
+        cancelBtn.firstChild.textContent = 'Enable ';
+      }
+    }
+
+    function showCancelBtn() {
+      cancelBtn.style.display = 'flex';
+      updateCancelBtnUI();
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        if (autoScrollEnabled) cancelBtn.style.display = 'none';
+      }, 4000);
+    }
+    function hideCancelBtn() {
+      cancelBtn.style.display = 'none';
+      clearTimeout(scrollTimeout);
+    }
+
+    cancelBtn.addEventListener('click', function() {
+      autoScrollEnabled = !autoScrollEnabled;
+      localStorage.setItem('autoScrollEnabled', autoScrollEnabled);
+      updateCancelBtnUI();
+      // Immediately show the button for feedback
+      cancelBtn.style.display = 'flex';
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        if (autoScrollEnabled) cancelBtn.style.display = 'none';
+      }, 4000);
+    });
+
+    events.forEach(event => {
+      event.addEventListener('mouseenter', () => {
+        if (lockedEvent || !autoScrollEnabled) return;
+        timelineSection.classList.add('timeline-fade-active');
+        event.classList.add('timeline-event-hover');
+        event.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        showCancelBtn();
+      });
+      event.addEventListener('mouseleave', () => {
+        if (lockedEvent) return;
+        timelineSection.classList.remove('timeline-fade-active');
+        event.classList.remove('timeline-event-hover');
+      });
+      event.addEventListener('focusin', () => {
+        if (lockedEvent || !autoScrollEnabled) return;
+        timelineSection.classList.add('timeline-fade-active');
+        event.classList.add('timeline-event-hover');
+        event.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        showCancelBtn();
+      });
+      event.addEventListener('focusout', () => {
+        if (lockedEvent) return;
+        timelineSection.classList.remove('timeline-fade-active');
+        event.classList.remove('timeline-event-hover');
+      });
+
+      // Lock/unlock on click (no freeze)
+      event.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (lockedEvent === event) {
+          // Unlock
+          lockedEvent = null;
+          timelineSection.classList.remove('timeline-fade-active');
+          event.classList.remove('timeline-event-hover');
+          hideCancelBtn();
+        } else {
+          // Lock
+          if (lockedEvent) {
+            lockedEvent.classList.remove('timeline-event-hover');
+          }
+          lockedEvent = event;
+          timelineSection.classList.add('timeline-fade-active');
+          event.classList.add('timeline-event-hover');
+          if (autoScrollEnabled) {
+            event.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+          }
+          showCancelBtn();
+        }
+      });
+    });
+
+    // Clicking outside the timeline unlocks
+    document.addEventListener('click', function(e) {
+      if (lockedEvent && !timelineSection.contains(e.target)) {
+        timelineSection.classList.remove('timeline-fade-active');
+        lockedEvent.classList.remove('timeline-event-hover');
+        lockedEvent = null;
+        hideCancelBtn();
+      }
+    });
+
+    // On page load, set button UI to match persisted state
+    updateCancelBtnUI();
+  });
+  </script>
 </body>
 </html>

@@ -68,7 +68,7 @@ html {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: url('img/66324e486200c36002784fe2_1702348628_en-idei-club-p-best-office-pictures-dizain-krasivo-64.jpg') center/cover no-repeat;
+  background: url('img/Screenshot 2025-05-29 163824.png') center/cover no-repeat;
   margin-bottom: 2em;
   border-radius: 0 0 18px 18px;
   overflow: hidden;
@@ -269,6 +269,7 @@ section {
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
   width: 100%;
   max-width: 1200px;
   margin: 3em auto;
@@ -276,6 +277,33 @@ section {
   background: #fff;
   border-radius: 14px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  position: relative;
+  /* Prevent vertical scrolling on wheel, force horizontal scroll */
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: none;
+  cursor: grab;
+}
+
+.timeline-section:active {
+  cursor: grabbing;
+}
+
+/* Enable horizontal scrolling on hover for mouse wheel */
+.timeline-section:hover,
+.timeline-section:focus-within {
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: none;
+  /* No change needed for overflow-x, already set to auto */
+}
+
+.timeline-section::-webkit-scrollbar {
+  height: 10px;
+  background: #eaf6fb;
+  border-radius: 6px;
+}
+.timeline-section::-webkit-scrollbar-thumb {
+  background: #b3e5fc;
+  border-radius: 6px;
 }
 
 .timeline-event {
@@ -295,16 +323,17 @@ section {
   cursor: pointer;
   z-index: 1;
   padding: 0;
-  transition: box-shadow 0.22s, transform 0.22s cubic-bezier(.4,2,.6,1);
+  transition: box-shadow 0.22s, transform 0.22s cubic-bezier(.4,2,.6,1), filter 0.22s;
   overflow: hidden;
 }
 
 .timeline-event:focus-within,
 .timeline-event:hover {
   transform: scale(1.05) translateY(-8px);
-  box-shadow: 0 8px 32px rgba(24,144,163,0.18), 0 2px 8px rgba(24,144,163,0.08);
+  box-shadow: 0 12px 36px rgba(24,144,163,0.22), 0 2px 8px rgba(24,144,163,0.08);
   background: #f5fdff;
   border-color: #1976d2;
+  filter: brightness(1.03) saturate(1.1);
 }
 
 .timeline-img {
@@ -380,6 +409,45 @@ section {
   z-index: 2;
 }
 
+/* Timeline fade overlay, hidden by default */
+.timeline-fade-overlay {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background: rgba(30, 44, 70, 0.32);
+  opacity: 0;
+  transition: opacity 0.35s;
+  z-index: 10;
+}
+
+/* Show overlay when any timeline-event is hovered/focused */
+.timeline-section.timeline-fade-active .timeline-fade-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Keep hovered/focused card above overlay */
+.timeline-event {
+  position: relative;
+  z-index: 11;
+}
+
+/* Lower z-index for non-hovered cards when overlay is active */
+.timeline-section.timeline-fade-active .timeline-event {
+  z-index: 11;
+}
+.timeline-section.timeline-fade-active .timeline-event:not(.timeline-event-hover) {
+  z-index: 11;
+  filter: blur(1.5px) grayscale(0.2);
+  opacity: 0.7;
+  transition: filter 0.3s, opacity 0.3s;
+}
+.timeline-section.timeline-fade-active .timeline-event.timeline-event-hover {
+  z-index: 12;
+  filter: none;
+  opacity: 1;
+}
+
 /* Responsive: stack timeline vertically on small screens */
 @media (max-width: 700px) {
   .timeline-section {
@@ -390,6 +458,8 @@ section {
     gap: 1.2em;
     padding: 1em 0;
     align-items: center;
+    overscroll-behavior-x: auto;
+    overscroll-behavior-y: contain;
   }
   .timeline-event {
     flex: unset;
@@ -409,4 +479,93 @@ section {
     border-radius: 16px 16px 0 0;
     height: 120px;
   }
+}
+
+/* Make vertical mouse wheel scroll horizontally on desktop for timeline */
+@media (min-width: 701px) {
+  .timeline-section {
+    /* ...existing code... */
+  }
+}
+@media (pointer: fine) {
+  .timeline-section {
+    /* ...existing code... */
+  }
+}
+@media (min-width: 701px) {
+  .timeline-section {
+    /* ...existing code... */
+  }
+}
+
+/* JavaScript for horizontal scroll on wheel (add to your HTML file) */
+/*
+<script>
+document.querySelector('.timeline-section').addEventListener('wheel', function(e) {
+  if (window.innerWidth > 700) {
+    if (e.deltaY !== 0) {
+      e.preventDefault();
+      this.scrollLeft += e.deltaY;
+    }
+  }
+}, { passive: false });
+</script>
+*/
+
+/* Cancel scroll button styles */
+.cancel-scroll-btn {
+  position: fixed;
+  top: 24px;
+  right: 32px;
+  z-index: 2000;
+  background: #e53935;
+  color: #fff;
+  border: none;
+  border-radius: 22px;
+  padding: 0.5em 1.2em;
+  font-size: 1em;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  box-shadow: 0 2px 8px rgba(229,57,53,0.13);
+  transition: background 0.2s, box-shadow 0.2s, opacity 0.2s, visibility 0s;
+  opacity: 1;
+  visibility: visible;
+}
+
+.cancel-scroll-btn[style*="display: none"] {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.cancel-scroll-btn:hover,
+.cancel-scroll-btn:focus {
+  background: #b71c1c;
+  box-shadow: 0 4px 16px rgba(229,57,53,0.22);
+}
+
+.cancel-scroll-btn.cancelled {
+  background: #43a047 !important;
+  color: #fff !important;
+}
+
+.cancel-scroll-btn.cancelled .cancel-scroll-note {
+  color: #fff;
+  opacity: 1;
+}
+
+.cancel-scroll-note {
+  font-size: 0.95em;
+  font-weight: normal;
+  color: #fff;
+  opacity: 0.85;
+  margin-left: 0.2em;
+}
+
+/* Make sure .timeline-section is position:relative for absolute button */
+.timeline-section {
+  position: relative;
 }
