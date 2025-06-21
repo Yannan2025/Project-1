@@ -483,19 +483,10 @@ section {
 
 /* Make vertical mouse wheel scroll horizontally on desktop for timeline */
 @media (min-width: 701px) {
-  .timeline-section {
-    /* ...existing code... */
-  }
 }
 @media (pointer: fine) {
-  .timeline-section {
-    /* ...existing code... */
-  }
 }
 @media (min-width: 701px) {
-  .timeline-section {
-    /* ...existing code... */
-  }
 }
 
 /* JavaScript for horizontal scroll on wheel (add to your HTML file) */
@@ -1047,18 +1038,4 @@ body.rtl .carousel-control-next,
 html.rtl .carousel-control-next {
   left: 0;
   right: auto;
-}
-
-/* Features Section: Explore More */
-.features-section h4 {
-  margin-top: 1rem;
-  font-weight: 600;
-}
-
-.features-section .btn {
-  transition: all 0.3s ease;
-}
-
-.features-section .btn:hover {
-  transform: scale(1.05);
 }
