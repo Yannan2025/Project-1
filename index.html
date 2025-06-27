@@ -471,6 +471,45 @@
     let gameOver = false;
     let difficultyMode = false;
 
+    // --- Milestone Messages Setup ---
+    const milestones = [
+      { score: 20, message: "Great start! 20 points!" },
+      { score: 50, message: "Halfway there! 50 points!" },
+      { score: 80, message: "Almost to the next level! 80 points!" }
+    ];
+    let shownMilestones = [];
+
+    function checkMilestones() {
+      for (const m of milestones) {
+        if (score >= m.score && !shownMilestones.includes(m.score)) {
+          shownMilestones.push(m.score);
+          showMilestoneMsg(m.message);
+        }
+      }
+    }
+
+    function showMilestoneMsg(msg) {
+      // Overlay message on canvas for a short time
+      ctx.save();
+      ctx.font = 'bold 22px sans-serif';
+      ctx.fillStyle = '#fff';
+      ctx.strokeStyle = '#1565c0';
+      ctx.lineWidth = 3;
+      ctx.textAlign = 'center';
+      ctx.strokeText(msg, canvas.width/2, 60);
+      ctx.fillText(msg, canvas.width/2, 60);
+      ctx.restore();
+      // Also show as floating message for accessibility
+      const el = document.getElementById('droplet-float-msg');
+      el.textContent = msg;
+      el.style.color = '#1565c0';
+      el.style.opacity = '1';
+      clearTimeout(el._hideTimer);
+      el._hideTimer = setTimeout(() => {
+        el.style.opacity = '0';
+      }, 1200);
+    }
+
     function resetGame() {
       score = 0;
       level = 1;
@@ -485,6 +524,7 @@
       }
       dropletTimer = 0;
       gameOver = false;
+      shownMilestones = []; // Reset milestones for new game
       updateUI();
     }
 
@@ -726,6 +766,36 @@
       return null;
     }
 
+    // --- Sound Effects Setup ---
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+    function playBlueSound() {
+      if (!audioCtx) audioCtx = new AudioContext();
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = 'sine';
+      o.frequency.value = 660;
+      g.gain.value = 0.18;
+      o.connect(g).connect(audioCtx.destination);
+      o.start();
+      o.frequency.linearRampToValueAtTime(880, audioCtx.currentTime + 0.13);
+      g.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.18);
+      o.stop(audioCtx.currentTime + 0.18);
+    }
+    function playBlackSound() {
+      if (!audioCtx) audioCtx = new AudioContext();
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = 'triangle';
+      o.frequency.value = 220;
+      g.gain.value = 0.22;
+      o.connect(g).connect(audioCtx.destination);
+      o.start();
+      o.frequency.linearRampToValueAtTime(110, audioCtx.currentTime + 0.18);
+      g.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.22);
+      o.stop(audioCtx.currentTime + 0.22);
+    }
+
     canvas.addEventListener('click', function(e) {
       if (!running) return;
       const rect = canvas.getBoundingClientRect();
@@ -742,9 +812,12 @@
           frame: 0
         });
         showFloatMsg(hit.droplet.type === 'blue' ? 'nice' : 'nooo', hit.droplet.type === 'blue');
+        // --- Play sound effect based on droplet type ---
         if (hit.droplet.type === 'blue') {
+          playBlueSound();
           score = Math.min(100, score + 20);
         } else {
+          playBlackSound();
           // In difficulty mode, oil droplet penalty increases
           const penalty = difficultyMode ? 45 : 30;
           score = Math.max(0, score - penalty);
@@ -754,6 +827,7 @@
         }
         droplets.splice(hit.index, 1);
         updateUI();
+        checkMilestones(); // <-- Check for milestone after score update
         checkLevelUp();
       }
     });
