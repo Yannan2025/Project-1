@@ -710,15 +710,31 @@
     function endGame(won) {
       running = false;
       gameOver = true;
+      // --- Play win/lose sound effect ---
+      if (won) {
+        playWinSound();
+      } else {
+        playLoseSound();
+      }
       setTimeout(() => {
         ctx.clearRect(0,0,canvas.width,canvas.height);
         showMessage(won ? 'You Win! 🎉' : 'Game Over');
         setTimeout(() => {
           if (won) {
             launchConfetti();
-            // Show difficulty mode button after win
-            diffBtn.style.display = '';
-            diffDesc.style.display = '';
+            // Difficulty mode button is now always on start screen, so hide here
+            diffBtn.style.display = 'none';
+            diffDesc.style.display = 'none';
+            // Only allow normal restart
+            startBtn.style.display = '';
+            startBtn.textContent = 'Restart';
+            startBtn.onclick = function() {
+              difficultyMode = false;
+              diffBtn.style.display = '';
+              diffDesc.style.display = '';
+              resetGameAndStart();
+              startBtn.style.display = 'none';
+            };
           } else {
             launchSkulls();
             diffBtn.style.display = 'none';
@@ -726,8 +742,18 @@
           }
           setTimeout(() => {
             hideGameUI();
-            startBtn.style.display = '';
-            startBtn.textContent = 'Restart';
+            // Only show restart button if not won
+            if (!won) {
+              startBtn.style.display = '';
+              startBtn.textContent = 'Restart';
+              startBtn.onclick = function() {
+                difficultyMode = false;
+                diffBtn.style.display = '';
+                diffDesc.style.display = '';
+                resetGameAndStart();
+                startBtn.style.display = 'none';
+              };
+            }
           }, 1800);
         }, 900);
       }, 300);
@@ -795,6 +821,38 @@
       g.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.22);
       o.stop(audioCtx.currentTime + 0.22);
     }
+    // --- Win/Lose Sound Effects ---
+    function playWinSound() {
+      if (!audioCtx) audioCtx = new AudioContext();
+      // Simple arpeggio up
+      const notes = [523, 659, 784, 1046];
+      notes.forEach((freq, i) => {
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type = 'triangle';
+        o.frequency.value = freq;
+        g.gain.value = 0.18;
+        o.connect(g).connect(audioCtx.destination);
+        const t = audioCtx.currentTime + i * 0.12;
+        o.start(t);
+        g.gain.linearRampToValueAtTime(0, t + 0.11);
+        o.stop(t + 0.13);
+      });
+    }
+    function playLoseSound() {
+      if (!audioCtx) audioCtx = new AudioContext();
+      // Simple descending "wah-wah"
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = 'sawtooth';
+      o.frequency.value = 330;
+      g.gain.value = 0.22;
+      o.connect(g).connect(audioCtx.destination);
+      o.start();
+      o.frequency.linearRampToValueAtTime(110, audioCtx.currentTime + 0.45);
+      g.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
+      o.stop(audioCtx.currentTime + 0.5);
+    }
 
     canvas.addEventListener('click', function(e) {
       if (!running) return;
@@ -861,10 +919,11 @@
       animationId = requestAnimationFrame(gameLoop);
     }
 
+    // Show difficulty mode button on start screen
     startBtn.addEventListener('click', function() {
       difficultyMode = false;
-      diffBtn.style.display = 'none';
-      diffDesc.style.display = 'none';
+      diffBtn.style.display = '';
+      diffDesc.style.display = '';
       resetGameAndStart();
       startBtn.style.display = 'none';
     });
@@ -874,10 +933,14 @@
     diffBtn.addEventListener('click', function() {
       difficultyMode = true;
       resetGameAndStart();
-      diffBtn.style.display = 'none';
+      diffBtn.style.display = '';
       diffDesc.style.display = '';
       startBtn.style.display = 'none';
     });
+
+    // On page load, show difficulty button and description
+    diffBtn.style.display = '';
+    diffDesc.style.display = '';
   })();
   </script>
 </body>
