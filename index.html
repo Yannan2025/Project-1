@@ -437,6 +437,10 @@
         <h2>A New Game by Yannan He</h2>
         <p>Try my latest creation! Click start to play below.</p>
         <button id="new-game-start-btn" class="btn btn-lg btn-primary">Start</button>
+        <button id="difficulty-mode-btn" class="btn btn-lg btn-danger" style="display:none;margin-top:1em;">Difficulty Mode</button>
+        <div id="difficulty-mode-desc" style="display:none;margin-top:0.7em;background:#fff3e0;color:#b71c1c;padding:0.7em 1em;border-radius:8px;font-size:1em;">
+          <b>Difficulty Mode:</b> Droplets fall 10% faster and oil droplets subtract more points. Can you beat the challenge?
+        </div>
       </div>
     </div>
   </section>
@@ -452,6 +456,8 @@
     const gauge = document.getElementById('droplet-gauge');
     const levelLabel = document.getElementById('droplet-level-label');
     const resetBtn = document.getElementById('droplet-reset-btn');
+    const diffBtn = document.getElementById('difficulty-mode-btn');
+    const diffDesc = document.getElementById('difficulty-mode-desc');
 
     let running = false;
     let score = 0;
@@ -463,13 +469,20 @@
     let animationId = null;
     let maxScore = 100;
     let gameOver = false;
+    let difficultyMode = false;
 
     function resetGame() {
       score = 0;
       level = 1;
       droplets = [];
-      dropletSpeed = 2;
-      dropletInterval = 1200;
+      // Set speed and interval based on difficulty
+      if (difficultyMode) {
+        dropletSpeed = 2 * 1.1; // 10% faster
+        dropletInterval = 1200 * 0.9; // 10% faster
+      } else {
+        dropletSpeed = 2;
+        dropletInterval = 1200;
+      }
       dropletTimer = 0;
       gameOver = false;
       updateUI();
@@ -490,6 +503,9 @@
       droplets.push({ x, y: -20, r: 18, color, type });
     }
 
+    // --- Pop Animation ---
+    let poppingDroplets = [];
+    const popFrames = 12;
     function drawDroplets() {
       for (const d of droplets) {
         ctx.beginPath();
@@ -507,6 +523,17 @@
           ctx.fill();
         }
       }
+      // Draw popping droplets
+      for (const p of poppingDroplets) {
+        const progress = p.frame / popFrames;
+        ctx.save();
+        ctx.globalAlpha = 1 - progress;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r * (1 + progress * 1.2), 0, 2 * Math.PI);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+        ctx.restore();
+      }
     }
 
     function updateDroplets() {
@@ -515,6 +542,8 @@
       }
       // Remove off-screen droplets
       droplets = droplets.filter(d => d.y < canvas.height + 30);
+      // Remove finished pops
+      poppingDroplets = poppingDroplets.filter(p => p.frame < popFrames);
     }
 
     function checkLevelUp() {
@@ -647,8 +676,13 @@
         setTimeout(() => {
           if (won) {
             launchConfetti();
+            // Show difficulty mode button after win
+            diffBtn.style.display = '';
+            diffDesc.style.display = '';
           } else {
             launchSkulls();
+            diffBtn.style.display = 'none';
+            diffDesc.style.display = 'none';
           }
           setTimeout(() => {
             hideGameUI();
@@ -659,10 +693,18 @@
       }, 300);
     }
 
+    // Animate popping droplets
+    function animatePops() {
+      for (const p of poppingDroplets) {
+        p.frame++;
+      }
+    }
+
     function gameLoop(ts) {
       if (!running) return;
       ctx.clearRect(0,0,canvas.width,canvas.height);
       drawDroplets();
+      animatePops();
       updateDroplets();
       dropletTimer += 16;
       if (dropletTimer > dropletInterval) {
@@ -691,11 +733,21 @@
       const y = (e.clientY - rect.top) * (canvas.height / rect.height);
       const hit = getDropletAt(x, y);
       if (hit) {
+        // Add to popping animation
+        poppingDroplets.push({
+          x: hit.droplet.x,
+          y: hit.droplet.y,
+          r: hit.droplet.r,
+          color: hit.droplet.color,
+          frame: 0
+        });
         showFloatMsg(hit.droplet.type === 'blue' ? 'nice' : 'nooo', hit.droplet.type === 'blue');
         if (hit.droplet.type === 'blue') {
           score = Math.min(100, score + 20);
         } else {
-          score = Math.max(0, score - 30);
+          // In difficulty mode, oil droplet penalty increases
+          const penalty = difficultyMode ? 45 : 30;
+          score = Math.max(0, score - penalty);
           if (score === 0) {
             endGame(false);
           }
@@ -705,6 +757,7 @@
         checkLevelUp();
       }
     });
+
     function showFloatMsg(msg, isBlue) {
       const el = document.getElementById('droplet-float-msg');
       el.textContent = msg;
@@ -735,11 +788,21 @@
     }
 
     startBtn.addEventListener('click', function() {
+      difficultyMode = false;
+      diffBtn.style.display = 'none';
+      diffDesc.style.display = 'none';
       resetGameAndStart();
       startBtn.style.display = 'none';
     });
     resetBtn.addEventListener('click', function() {
       resetGameAndStart();
+    });
+    diffBtn.addEventListener('click', function() {
+      difficultyMode = true;
+      resetGameAndStart();
+      diffBtn.style.display = 'none';
+      diffDesc.style.display = '';
+      startBtn.style.display = 'none';
     });
   })();
   </script>
